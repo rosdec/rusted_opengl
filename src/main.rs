@@ -3,6 +3,7 @@ use winit::{
     event_loop::{ EventLoop},
     window::WindowBuilder,
 };
+extern crate gl;
 
 fn main() {
     let event_loop = EventLoop::new();
@@ -17,12 +18,13 @@ fn main() {
 
         match event {
             Event::WindowEvent {
-                event: WindowEvent::CloseRequested,
-                window_id,
-            } if window_id == window.id() => control_flow.set_exit(),
+                event: WindowEvent::CloseRequested, window_id
+            } => {
+                control_flow.set_exit();
+            },
             Event::MainEventsCleared => {
                 window.request_redraw();
-            }
+            } 
             _ => (),
         }
     });
