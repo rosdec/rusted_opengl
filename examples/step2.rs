@@ -26,6 +26,8 @@ fn main() {
     let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
     let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
 
+    const TARGET_FPS: u64 = 60;
+
     let vertex_shader_src = r#"
         #version 140
         in vec2 position;
@@ -54,6 +56,7 @@ fn main() {
     let mut t: f32 = 0.0;
     let mut delta: f32 = 0.02;
     event_loop.run(move |event, _, control_flow| {
+        let start_time = std::time::Instant::now();
 
         match event {
             glutin::event::Event::WindowEvent { event, .. } => match event {
@@ -65,7 +68,7 @@ fn main() {
                     if let Some(key) = input.virtual_keycode {
                         match key {
                             glutin::event::VirtualKeyCode::C => delta = -delta,
-                            glutin::event::VirtualKeyCode::L => t = 0.0,
+                            glutin::event::VirtualKeyCode::R => t = 0.0,
                             _ => {}
                         }
                     }
@@ -80,9 +83,15 @@ fn main() {
             _ => return,
         }
 
-        let next_frame_time = std::time::Instant::now() +
-            std::time::Duration::from_nanos(16_666_667);
-         *control_flow = glutin::event_loop::ControlFlow::WaitUntil(next_frame_time);
+        let elapsed_time = std::time::Instant::now().duration_since(start_time).as_millis() as u64;
+
+        let wait_millis = match 1000 / TARGET_FPS >= elapsed_time {
+            true => 1000 / TARGET_FPS - elapsed_time,
+            false => 0
+        };
+        let new_inst = start_time + std::time::Duration::from_millis(wait_millis);
+
+        *control_flow =  glutin::event_loop::ControlFlow::WaitUntil(new_inst);
 
         t += delta;
 
