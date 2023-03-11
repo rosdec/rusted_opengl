@@ -58,7 +58,7 @@ fn main() {
 
     event_loop.run(move |event, _, control_flow| {
         let start_time = std::time::Instant::now();
-        
+
         match event {
             glutin::event::Event::WindowEvent { event, .. } => match event {
                 glutin::event::WindowEvent::CloseRequested => {
@@ -86,9 +86,9 @@ fn main() {
         *control_flow =  glutin::event_loop::ControlFlow::WaitUntil(new_inst);
 
         t += delta;
-        if (t > std::f32::consts::PI) || (t < -std::f32::consts::PI) {
-            delta = -delta;
-        }
+if (t > std::f32::consts::PI) || (t < -std::f32::consts::PI) {
+    delta = -delta;
+}
 
         let mut target = display.draw();
         target.clear_color(0.0, 0.0, 1.0, 1.0);
