@@ -9,6 +9,7 @@ fn main() {
 
     let cb = glium::glutin::ContextBuilder::new();
 
+    // You will get a warning on the next line but we will fix this later on
     let display = glium::Display::new(wb, cb, &event_loop).unwrap();
 
     event_loop.run(move |event, _, control_flow| {
